@@ -1,0 +1,22 @@
+name: Garnet Wallet Core CI
+on:
+  workflow_dispatch:
+jobs:
+  dep-audit:
+    name: Dependency Audit (Garnet)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Garnet Runtime Visibility
+        uses: garnet-org/action@v2
+        with:
+          api_token: ${{ secrets.GARNET_API_TOKEN }}
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Cargo fetch (wallet-core rust bindings)
+        working-directory: rust
+        run: cargo fetch --locked
+      - name: Cargo tree
+        working-directory: rust
+        run: cargo tree --depth 2
